@@ -159,9 +159,11 @@ extension VideoPlayerView {
     
     fileprivate func addObserverToPlayerItem() {
         // Register as an observer of the player item's status property
-        self.observer = self.playerItem!.observe(\.status, options: [.initial, .new], changeHandler: { item, _ in
-            let status = item.status
-            // Switch over the status
+        self.observer = self.playerItem!.observe(\.status, options: [.initial, .new], changeHandler: { item, change in
+            
+             // workaround for https://bugs.swift.org/browse/SR-11617
+            let status = change.newValue ?? item.status
+             // Switch over the status
             switch status {
             case .readyToPlay:
                 // Player item is ready to play.
